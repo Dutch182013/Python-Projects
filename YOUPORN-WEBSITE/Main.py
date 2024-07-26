@@ -1,23 +1,23 @@
 from src.components.HTML5 import HTML5
 from src.components.YOUPORN import YOUPORN
 import sys
+
 HTML = {
     "title" : 'YouPorn',
-    "style" : '*{padding: 0;margin: 0;box-sizing: border-box;} body{width: 100vw;height: 100vh;background-color: #333;} iframe{margin: 0;padding: 0;}'
+    "style" : '* {padding: 0;margin: 0;box-sizing: border-box;} body {width: 100vw;height: 100vh;background-color: #333;} iframe {width: 100vw;height: 50vh;margin: 0;padding: 0;}'
 }
-BODY = {
-    "style" : 'background-color: #333;width:100vw;height:100vh;'
-}
+
+STYLE = HTML['style']
 
 Html5 = HTML5()
 def preview(data):
     return Html5.pack(
 
-        style= Html5.style(HTML['style']),
-        tagtitle= Html5.title(Html5.style("color:#000;"),HTML['title']),
+        style= "",
+        tagtitle= Html5.title(Html5.style("color:#000;"),HTML['title']) + '\n    <style>' + STYLE + '</style>',
 
         tagbody= Html5.body(
-                style= Html5.style(BODY['style']),
+                style= "",
                 tagarray= [data]
         )
     )
@@ -35,18 +35,22 @@ def main():
             elif search == ".y" or search == ".Y":
                 print("Loading")
                 print(search_all)
-                path_all += str(input(" set Path : "))
+                path = str(input(" set Path : "))
+                if path == "":
+                    path_all = YouPorn.setPath + "htmls"
+                elif path == True:
+                    path_all = path
                 break
             else:
                 search_all.append(search)
         for search_leigth in search_all:
             output = ""
             for video in YouPorn.search(search_leigth):
-                output += Html5.iframe(
-                    Html5.style("width:100%;height:50%;"),
+                output += "\n    " + Html5.iframe(
+                    " ",
                     video['video']
                 )
-            open(YouPorn.setPath + "htmls/" + path_all + search_leigth + ".html", "w").write(preview(output))
+            open(path_all + "/" + search_leigth + ".html", "w").write(preview(output))
 
 if __name__ == "__main__":
     main()
